@@ -1,5 +1,9 @@
-POST http://127.0.0.1:8000/addtask HTTP/1.1
+# POST http://127.0.0.1:8000/addtask HTTP/1.1
 
-{
-    "item": "Turn into a dragon"
-}
+# {
+#     "item": "Turn into a dragon"
+# }
+
+# #
+
+GET http://127.0.0.1:8000/readtasks HTTP/1.1
