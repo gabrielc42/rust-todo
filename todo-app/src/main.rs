@@ -81,11 +81,11 @@ fn edit_todo(todo_update: Json<TodoUpdate<'_>>) -> &'static str{
             == todo_update.id
         {
             let todo_items: [&str; 2] = [line_pieces[0], todo_update.item];
-            let todo = format!("{}\n", todo_items.join(","));
+            let todo = format!("{}\r\n", todo_items.join(","));
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         } else {
-            let todo = format!("{}\n", line_string);
+            let todo = format!("{}\r\n", line_string);
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         }
@@ -103,7 +103,7 @@ struct TodoId {
 }
 
 #[delete("/deletetodo", data = "<todo_id>")]
-fn delete_todo(todo_id: Json<TodoId>) -> &'static str{
+fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str>{
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -127,7 +127,7 @@ fn delete_todo(todo_id: Json<TodoId>) -> &'static str{
             .expect("unable to parse id as u8")
             != todo_id.id
         {
-            let todo = format!("{}\n", line_string);
+            let todo = format!("{}\r\n", line_string);
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         }
@@ -135,7 +135,8 @@ fn delete_todo(todo_id: Json<TodoId>) -> &'static str{
 
     std::fs::remove_file("todos.txt").expect("unable to remove todos.txt");
     std::fs::rename("temp.txt", "todos.txt").expect("unable to rename temp.txt");
-    "Todo deleted succesfully"
+    "Todo deleted succesfully"; 
+    None
 }
 
 #[macro_use]
