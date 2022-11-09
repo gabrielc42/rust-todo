@@ -17,7 +17,7 @@ fn add_task(task: Json<Task<'_>>) -> &'static str {
                     .expect("unable to access tasks.txt");
     let task_item_string = format!("{}\n", task.item);
     let task_item_bytes = task_item_string.as_bytes();
-    task.write(task_item_bytes).expect("unable to write to tasks.txt");
+    tasks.write(task_item_bytes).expect("unable to write to tasks.txt");
     "Task added successfully"
 }
 
