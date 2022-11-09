@@ -6,4 +6,13 @@
 
 # #
 
-GET http://127.0.0.1:8000/readtasks HTTP/1.1
+# GET http://127.0.0.1:8000/readtasks HTTP/1.1
+
+#
+
+PUT http://127.0.0.1:8000/edittodo HTTP/1.1
+
+{
+    "id": 0,
+    "item": "turn into an electric dragon"
+}

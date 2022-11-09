@@ -56,7 +56,7 @@ struct TodoUpdate<'r> {
 }
 
 #[put("/edittodo", data = "<todo_update>")]
-fn edit_task(todo_update: Json<TodoUpdate<'_>>) -> &'static str {
+fn edit_todo(todo_update: Json<TodoUpdate<'_>>) -> &'static str{
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -89,7 +89,11 @@ fn edit_task(todo_update: Json<TodoUpdate<'_>>) -> &'static str {
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         }
-    }
+    } 
+    
+    std::fs::remove_file("tasks.txt").expect("unable to remove tasks.txt");
+    std::fs::rename("temp.txt", "tasks.txt").expect("unable to rename temp.txt");
+    "Task updated succesfully"
 }
 
 #[derive(Deserialize, Serialize)]
@@ -98,8 +102,8 @@ struct TodoId {
     id: u8,
 }
 
-#[delete("/deletetask", data = "<todo_id>")]
-fn delete_task(todo_id: Json<TodoId>) -> &'static str {
+#[delete("/deletetodo", data = "<todo_id>")]
+fn delete_todo(todo_id: Json<TodoId>) -> &'static str{
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -128,6 +132,10 @@ fn delete_task(todo_id: Json<TodoId>) -> &'static str {
                 .expect("could not write to temp file");
         }
     }
+
+    std::fs::remove_file("todos.txt").expect("unable to remove todos.txt");
+    std::fs::rename("temp.txt", "todos.txt").expect("unable to rename temp.txt");
+    "Todo deleted succesfully"
 }
 
 #[macro_use]
@@ -140,5 +148,5 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, add_todo, read_todos])
+    rocket::build().mount("/", routes![index, add_todo, read_todos, edit_todo, delete_todo])
 }
