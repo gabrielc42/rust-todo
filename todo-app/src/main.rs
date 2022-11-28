@@ -56,7 +56,7 @@ struct TodoUpdate<'r> {
 }
 
 #[put("/edittodo", data = "<todo_update>")]
-fn edit_todo(todo_update: Json<TodoUpdate<'_>>) -> &'static str{
+fn edit_todo(todo_update: Json<TodoUpdate<'_>>) -> &'static str {
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -89,11 +89,11 @@ fn edit_todo(todo_update: Json<TodoUpdate<'_>>) -> &'static str{
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         }
-    } 
-    
-    std::fs::remove_file("tasks.txt").expect("unable to remove tasks.txt");
-    std::fs::rename("temp.txt", "tasks.txt").expect("unable to rename temp.txt");
-    "Task updated succesfully"
+    }
+
+    std::fs::remove_file("todos.txt").expect("unable to remove todos.txt");
+    std::fs::rename("temp.txt", "todos.txt").expect("unable to rename temp.txt");
+    "Todo updated succesfully"
 }
 
 #[derive(Deserialize, Serialize)]
@@ -103,7 +103,7 @@ struct TodoId {
 }
 
 #[delete("/deletetodo", data = "<todo_id>")]
-fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str>{
+fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str> {
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -127,7 +127,7 @@ fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str>{
             .expect("unable to parse id as u8")
             != todo_id.id
         {
-            let todo = format!("{}\r\n", line_string);
+            let todo = format!("{}\n", line_string);
             temp.write(todo.as_bytes())
                 .expect("could not write to temp file");
         }
@@ -135,7 +135,7 @@ fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str>{
 
     std::fs::remove_file("todos.txt").expect("unable to remove todos.txt");
     std::fs::rename("temp.txt", "todos.txt").expect("unable to rename temp.txt");
-    "Todo deleted succesfully"; 
+    "Todo deleted succesfully";
     None
 }
 
@@ -149,5 +149,8 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, add_todo, read_todos, edit_todo, delete_todo])
+    rocket::build().mount(
+        "/",
+        routes![index, add_todo, read_todos, edit_todo, delete_todo],
+    )
 }
