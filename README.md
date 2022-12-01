@@ -14,4 +14,5 @@ biggest challenges:
 
   - error started as parseError for id: u8, to editTodo and deleteTodo
     - refactored wrong names, rePost original test todo, new post included id
-    - then able to editTodo, delete sucess w/ 404 error
+    - then able to editTodo, delete success w/ 404 error
+    - -> delete success with 200, had to simply remove a semicolon after removing the Option<>, None for the '&string  
