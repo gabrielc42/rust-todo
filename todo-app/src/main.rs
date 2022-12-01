@@ -103,7 +103,7 @@ struct TodoId {
 }
 
 #[delete("/deletetodo", data = "<todo_id>")]
-fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str> {
+fn delete_todo(todo_id: Json<TodoId>) -> &'static str {
     let todos = OpenOptions::new()
         .read(true)
         .append(true)
@@ -135,8 +135,7 @@ fn delete_todo(todo_id: Json<TodoId>) -> Option<&'static str> {
 
     std::fs::remove_file("todos.txt").expect("unable to remove todos.txt");
     std::fs::rename("temp.txt", "todos.txt").expect("unable to rename temp.txt");
-    "Todo deleted succesfully";
-    None
+    "Todo deleted succesfully"
 }
 
 #[macro_use]
